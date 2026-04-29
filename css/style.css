@@ -1,1139 +1,483 @@
-/* ==========================================================
-   RESET & CSS CUSTOM PROPERTIES
-   ========================================================== */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-:root {
-  --bg: #0e0c0a;
-  --bg2: #161210;
-  --bg3: #1e1a16;
-  --card: #1a1612;
-  --ink: #f0ebe3;
-  --ink2: #a89880;
-  --ink3: #6a5d4e;
-  --accent: #c8874a;
-  --accent2: #e8b07a;
-  --accent-dim: rgba(200, 135, 74, 0.15);
-  --border: rgba(240, 235, 227, 0.08);
-  --border2: rgba(200, 135, 74, 0.25);
-  --serif: 'Playfair Display', Georgia, serif;
-  --sans: 'Jost', sans-serif;
-  /* FIX: Consistent section padding via variable */
-  --section-pad-x: 4rem;
-  --section-pad-y: 7rem;
-}
-
-/* ==========================================================
-   BASE
-   ========================================================== */
-html {
-  scroll-behavior: smooth;
-  /* FIX: Offset for fixed nav so sections aren't hidden behind it */
-  scroll-padding-top: 80px;
-}
-
-body {
-  font-family: var(--sans);
-  background: var(--bg);
-  color: var(--ink);
-  font-size: 15px;
-  line-height: 1.7;
-  overflow-x: hidden;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* ==========================================================
-   NAVIGATION
-   ========================================================== */
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem var(--section-pad-x);
-  background: rgba(14, 12, 10, 0);
-  transition: background 0.4s, padding 0.4s;
-  border-bottom: 1px solid transparent;
-}
-
-nav.scrolled {
-  background: rgba(14, 12, 10, 0.96);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding: 1rem var(--section-pad-x);
-  border-bottom-color: var(--border);
-}
-
-.nav-logo {
-  font-family: var(--serif);
-  font-size: 18px;
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  color: var(--ink);
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.nav-links {
-  display: flex;
-  gap: 2rem;
-  list-style: none;
-}
-
-.nav-links a {
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink2);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.nav-links a:hover {
-  color: var(--accent);
-}
-
-/* Hamburger */
-.hamburger {
-  display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 28px;
-  height: 20px;
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  z-index: 202;
-  padding: 0;
-}
-
-.hamburger span {
-  width: 100%;
-  height: 2px;
-  background: var(--ink);
-  transition: 0.3s ease;
-  border-radius: 2px;
-  display: block;
-}
-
-.hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
-.hamburger.active span:nth-child(2) { opacity: 0; }
-.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
-
-/* Mobile Menu */
-.mobile-menu {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  width: 75%;
-  max-width: 320px;
-  height: 100vh;
-  background: var(--bg2);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  z-index: 199;
-  padding: 6rem 2rem 2rem;
-  transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border-left: 1px solid var(--border);
-  /* FIX: Allow scroll on long mobile menus */
-  overflow-y: auto;
-}
-
-.mobile-menu.active { right: 0; }
-
-.mobile-menu ul {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.mobile-menu a {
-  font-size: 16px;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink2);
-  text-decoration: none;
-  display: block;
-  padding: 0.25rem 0;
-  transition: color 0.2s;
-}
-
-.mobile-menu a:hover { color: var(--accent); }
-
-.overlay-blur {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-  z-index: 198;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s, visibility 0.3s;
-}
-
-.overlay-blur.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* ==========================================================
-   HERO
-   ========================================================== */
-#hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 0 var(--section-pad-x) 5rem;
-  position: relative;
-}
-
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 60% 50% at 70% 40%, rgba(200, 135, 74, 0.06) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.hero-eyebrow {
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.hero-eyebrow span {
-  display: inline-block;
-  width: 48px;
-  height: 1px;
-  background: var(--accent);
-}
-
-h1.hero-name {
-  font-family: var(--serif);
-  font-size: clamp(64px, 11vw, 140px);
-  font-weight: 400;
-  line-height: 0.9;
-  color: var(--ink);
-  margin-bottom: 2.5rem;
-}
-
-h1.hero-name em {
-  display: block;
-  font-style: italic;
-  color: var(--accent2);
-  margin-left: 3rem;
-}
-
-.hero-bottom {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 2rem;
-}
-
-.hero-desc {
-  max-width: 400px;
-  font-size: 15px;
-  color: var(--ink2);
-}
-
-.hero-cta {
-  display: flex;
-  gap: 1rem;
-  flex-shrink: 0;
-}
-
-/* Buttons */
-.btn-fill {
-  background: var(--accent);
-  color: var(--bg);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 14px 28px;
-  text-decoration: none;
-  border: 1px solid var(--accent);
-  transition: all 0.25s;
-  display: inline-block;
-  white-space: nowrap;
-}
-
-.btn-fill:hover { background: var(--accent2); border-color: var(--accent2); }
-
-.btn-ghost {
-  background: transparent;
-  color: var(--ink);
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 14px 28px;
-  text-decoration: none;
-  border: 1px solid var(--border);
-  transition: all 0.25s;
-  display: inline-block;
-  white-space: nowrap;
-}
-
-.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-
-/* Scroll hint */
-.scroll-hint {
-  position: absolute;
-  bottom: 2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  font-size: 10px;
-  color: var(--ink3);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.scroll-line {
-  width: 1px;
-  height: 40px;
-  background: linear-gradient(to bottom, var(--ink3), transparent);
-  animation: scrollPulse 2s infinite;
-}
-
-@keyframes scrollPulse {
-  0%, 100% { opacity: 0.3; transform: scaleY(1); }
-  50% { opacity: 1; transform: scaleY(1.2); }
-}
-
-/* ==========================================================
-   SHARED SECTION UTILITIES
-   ========================================================== */
-.sec-head {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  margin-bottom: 4rem;
-  flex-wrap: wrap;
-}
-
-.sec-index {
-  font-family: var(--serif);
-  font-size: 12px;
-  color: var(--ink3);
-  flex-shrink: 0;
-}
-
-.sec-title {
-  font-family: var(--serif);
-  font-size: clamp(32px, 4vw, 48px);
-  font-weight: 400;
-  white-space: nowrap;
-}
-
-.sec-title em { font-style: italic; color: var(--accent2); }
-
-.sec-rule {
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-  min-width: 40px;
-}
-
-.section-cta {
-  text-align: center;
-  margin-top: 3rem;
-}
-
-/* ==========================================================
-   ABOUT
-   ========================================================== */
-#about {
-  padding: var(--section-pad-y) var(--section-pad-x);
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6rem;
-  align-items: start;
-}
-
-.about-label {
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 1.5rem;
-}
-
-.about-heading {
-  font-family: var(--serif);
-  font-size: clamp(34px, 4vw, 52px);
-  font-weight: 400;
-  line-height: 1.15;
-  margin-bottom: 2rem;
-}
-
-.about-heading em { font-style: italic; color: var(--accent2); }
-
-.about-text {
-  font-size: 15px;
-  color: var(--ink2);
-  line-height: 1.85;
-  margin-bottom: 1.25rem;
-}
-
-.info-row {
-  padding: 1.2rem 0;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.info-row:first-child { border-top: 1px solid var(--border); }
-
-.info-key {
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink3);
-}
-
-.info-val {
-  font-size: 14px;
-  color: var(--ink);
-}
-
-.info-val a { color: var(--accent); text-decoration: none; }
-.info-val a:hover { text-decoration: underline; }
-
-/* ==========================================================
-   SKILLS
-   ========================================================== */
-#skills {
-  background: var(--bg2);
-  padding: var(--section-pad-y) 0;
-}
-
-.skills-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--section-pad-x);
-}
-
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--border);
-}
-
-.skill-tile {
-  background: var(--bg2);
-  padding: 2.5rem 2rem;
-  position: relative;
-  transition: background 0.3s;
-}
-
-.skill-tile::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--accent);
-  transition: width 0.4s;
-}
-
-.skill-tile:hover { background: var(--bg3); }
-.skill-tile:hover::after { width: 100%; }
-
-.skill-glyph {
-  font-size: 32px;
-  color: var(--accent);
-  opacity: 0.4;
-  margin-bottom: 1rem;
-  display: block;
-  line-height: 1;
-}
-
-.skill-name {
-  font-family: var(--serif);
-  font-size: 20px;
-  font-weight: 400;
-  margin-bottom: 0.5rem;
-}
-
-.skill-desc {
-  font-size: 13px;
-  color: var(--ink2);
-  line-height: 1.6;
-}
-
-.sw-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 3rem;
-}
-
-.sw-chip {
-  font-size: 12px;
-  padding: 7px 18px;
-  border: 1px solid var(--border);
-  color: var(--ink2);
-  transition: all 0.2s;
-  letter-spacing: 0.04em;
-}
-
-.sw-chip:hover { border-color: var(--accent); color: var(--accent); }
-
-/* ==========================================================
-   EXPERIENCE
-   ========================================================== */
-#experience {
-  padding: var(--section-pad-y) var(--section-pad-x);
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.exp-item {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 3rem;
-  padding: 2.5rem 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.exp-item:first-of-type { padding-top: 0; }
-.exp-item:last-of-type { border-bottom: none; }
-
-.exp-period {
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  color: var(--ink3);
-  text-transform: uppercase;
-  line-height: 1.5;
-}
-
-.exp-org {
-  font-size: 13px;
-  color: var(--accent);
-  margin-top: 6px;
-  line-height: 1.5;
-}
-
-.exp-role {
-  font-family: var(--serif);
-  font-size: 24px;
-  font-weight: 400;
-  margin-bottom: 1rem;
-}
-
-.exp-bullets {
-  list-style: none;
-  padding: 0;
-}
-
-.exp-bullets li {
-  font-size: 14px;
-  color: var(--ink2);
-  padding-left: 1.5rem;
-  position: relative;
-  margin-bottom: 6px;
-  line-height: 1.6;
-}
-
-.exp-bullets li::before {
-  content: '—';
-  position: absolute;
-  left: 0;
-  color: var(--accent);
-}
-
-/* ==========================================================
-   GALLERY FILTER (shared between textile & graphic design)
-   ========================================================== */
-.gallery-filter,
-.gd-filter {
-  display: flex;
-  gap: 0.75rem;
-  margin-bottom: 3rem;
-  flex-wrap: wrap;
-}
-
-.filter-btn {
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 7px 18px;
-  border: 1px solid var(--border);
-  color: var(--ink2);
-  background: transparent;
-  cursor: pointer;
-  font-family: var(--sans);
-  transition: all 0.2s;
-}
-
-.filter-btn.active,
-.filter-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-dim);
-}
-
-/* ==========================================================
-   TEXTILE GALLERY
-   ========================================================== */
-#gallery {
-  background: var(--bg2);
-  padding: var(--section-pad-y) 0;
-}
-
-.gallery-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--section-pad-x);
-}
-
-/* Bento grid */
-.gallery-bento {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-auto-rows: 220px;
-  gap: 12px;
-}
-
-.g-item {
-  overflow: hidden;
-  position: relative;
-  background: #2a241e;
-  cursor: pointer;
-  border-radius: 4px;
-  border: 1px solid var(--border);
-  /* FIX: hidden items get display:none via JS, not opacity tricks */
-}
-
-.g-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
-  display: block;
-}
-
-.g-item:hover img { transform: scale(1.05); }
-
-.g-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 1.25rem;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 55%);
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
-}
-
-.g-item:hover .g-overlay { opacity: 1; }
-
-.g-cat {
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 4px;
-}
-
-.g-name {
-  font-family: var(--serif);
-  font-size: 16px;
-  color: white;
-  font-style: italic;
-}
-
-.g-link-icon {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 32px;
-  height: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 14px;
-  opacity: 0;
-  transition: opacity 0.3s;
-  text-decoration: none;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 5;
-}
-
-.g-item:hover .g-link-icon { opacity: 1; }
-
-/* Grid span helpers */
-.gc-2 { grid-column: span 4; }
-.gc-3 { grid-column: span 6; }
-.gc-4 { grid-column: span 8; }
-.gr-2 { grid-row: span 2; }
-
-/* ==========================================================
-   LIGHTBOX
-   ========================================================== */
-#lightbox {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.95);
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-}
-
-#lightbox.open {
-  opacity: 1;
-  pointer-events: all;
-}
-
-#lightbox img {
-  max-width: 90vw;
-  max-height: 80vh;
-  object-fit: contain;
-  border-radius: 2px;
-}
-
-#lb-close {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  font-size: 28px;
-  color: var(--ink2);
-  cursor: pointer;
-  background: none;
-  border: none;
-  transition: color 0.2s;
-  padding: 8px;
-  line-height: 1;
-}
-
-#lb-close:hover { color: var(--accent); }
-
-#lb-caption {
-  position: absolute;
-  bottom: 2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  white-space: nowrap;
-}
-
-/* ==========================================================
-   GRAPHIC DESIGN SECTION (NEW)
-   ========================================================== */
-#graphic-design {
-  padding: var(--section-pad-y) 0;
-  background: var(--bg);
-  border-top: 1px solid var(--border);
-}
-
-.gd-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--section-pad-x);
-}
-
-.gd-intro {
-  font-size: 16px;
-  color: var(--ink2);
-  max-width: 560px;
-  margin-bottom: 3rem;
-  line-height: 1.8;
-  margin-top: -2rem;
-}
-
-/* Masonry-style responsive grid */
-.gd-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-.gd-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  overflow: hidden;
-  transition: border-color 0.3s, transform 0.3s;
-}
-
-.gd-card:hover {
-  border-color: var(--border2);
-  transform: translateY(-4px);
-}
-
-.gd-img-wrap {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 4 / 3;
-  background: var(--bg3);
-}
-
-.gd-img-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
-  display: block;
-}
-
-.gd-card:hover .gd-img-wrap img { transform: scale(1.06); }
-
-/* Hover overlay with zoom icon */
-.gd-hover {
-  position: absolute;
-  inset: 0;
-  background: rgba(200, 135, 74, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.gd-card:hover .gd-hover { opacity: 1; }
-
-.gd-zoom {
-  width: 48px;
-  height: 48px;
-  border: 1.5px solid rgba(255, 255, 255, 0.8);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  color: white;
-  font-weight: 300;
-  line-height: 1;
-}
-
-.gd-info {
-  padding: 1.25rem 1.5rem 1.5rem;
-}
-
-.gd-tag {
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  display: block;
-  margin-bottom: 0.4rem;
-}
-
-.gd-title {
-  font-family: var(--serif);
-  font-size: 20px;
-  font-weight: 400;
-  margin-bottom: 0.3rem;
-}
-
-.gd-sub {
-  font-size: 13px;
-  color: var(--ink3);
-}
-
-/* ==========================================================
-   EDUCATION
-   ========================================================== */
-#education {
-  padding: var(--section-pad-y) var(--section-pad-x);
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.edu-strip {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border: 1px solid var(--border);
-}
-
-.edu-left {
-  padding: 3.5rem;
-  background: var(--bg3);
-}
-
-.edu-badge {
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 1.5rem;
-}
-
-.edu-degree {
-  font-family: var(--serif);
-  font-size: 32px;
-  font-weight: 400;
-  margin-bottom: 0.4rem;
-}
-
-.edu-school {
-  font-family: var(--serif);
-  font-size: 17px;
-  font-style: italic;
-  color: var(--ink2);
-  margin-bottom: 2rem;
-  line-height: 1.5;
-}
-
-.edu-pills { display: flex; gap: 10px; flex-wrap: wrap; }
-
-.edu-pill {
-  font-size: 12px;
-  padding: 5px 14px;
-  border: 1px solid var(--border2);
-  color: var(--accent2);
-}
-
-.edu-right {
-  padding: 3.5rem;
-  background: var(--card);
-}
-
-.edu-right-head {
-  font-family: var(--serif);
-  font-size: 22px;
-  font-weight: 400;
-  margin-bottom: 0.75rem;
-}
-
-.edu-right-text {
-  font-size: 14px;
-  color: var(--ink2);
-  line-height: 1.8;
-}
-
-/* ==========================================================
-   CONTACT
-   ========================================================== */
-#contact {
-  background: var(--bg3);
-  border-top: 1px solid var(--border);
-  padding: var(--section-pad-y) var(--section-pad-x);
-}
-
-.contact-inner { max-width: 1200px; margin: 0 auto; }
-
-.contact-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6rem;
-  margin-top: 4rem;
-}
-
-.contact-tagline {
-  font-family: var(--serif);
-  font-size: clamp(22px, 3vw, 34px);
-  font-style: italic;
-  color: var(--ink2);
-  margin-bottom: 2.5rem;
-  line-height: 1.4;
-}
-
-.clink {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  font-size: 14px;
-  color: var(--ink2);
-  text-decoration: none;
-  margin-bottom: 1rem;
-  transition: color 0.2s;
-}
-
-.clink:hover { color: var(--accent2); }
-
-.clink-icon {
-  width: 38px;
-  height: 38px;
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-  flex-shrink: 0;
-}
-
-.social-list {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--border);
-}
-
-.soc-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.1rem 1.5rem;
-  border-bottom: 1px solid var(--border);
-  text-decoration: none;
-  transition: background 0.2s;
-}
-
-.soc-item:last-child { border-bottom: none; }
-.soc-item:hover { background: var(--accent-dim); }
-
-.soc-name { font-size: 14px; color: var(--ink); }
-.soc-handle { font-size: 11px; color: var(--ink3); margin-top: 2px; }
-.soc-arrow { color: var(--accent); font-size: 18px; }
-
-/* ==========================================================
-   FOOTER
-   ========================================================== */
-footer {
-  padding: 2rem var(--section-pad-x);
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--bg);
-}
-
-.foot-copy { font-size: 12px; color: var(--ink3); }
-
-.back-top {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--accent);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.back-top:hover { color: var(--accent2); }
-
-/* ==========================================================
-   RESPONSIVE — TABLET (max 1100px)
-   ========================================================== */
-@media (max-width: 1100px) {
-  .gd-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* ==========================================================
-   RESPONSIVE — MOBILE (max 900px)
-   ========================================================== */
-@media (max-width: 900px) {
-  :root {
-    --section-pad-x: 1.5rem;
-    --section-pad-y: 5rem;
-  }
-
-  /* Nav */
-  nav { padding: 1rem 1.5rem; }
-  nav.scrolled { padding: 0.85rem 1.5rem; }
-  .nav-links { display: none; }
-  .hamburger { display: flex; }
-
-  /* Hero */
-  h1.hero-name { font-size: clamp(52px, 14vw, 90px); }
-  h1.hero-name em { margin-left: 1.5rem; }
-  .hero-bottom { flex-direction: column; align-items: flex-start; }
-  .hero-cta { flex-wrap: wrap; }
-
-  /* About */
-  .two-col { grid-template-columns: 1fr; gap: 3rem; }
-
-  /* Skills */
-  .skills-grid { grid-template-columns: 1fr 1fr; }
-
-  /* Experience */
-  .exp-item { grid-template-columns: 1fr; gap: 0.75rem; }
-
-  /* Gallery bento */
-  .gallery-bento {
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 160px;
-  }
-  .gc-2, .gc-3, .gc-4 { grid-column: span 4; }
-  .gr-2 { grid-row: span 1; }
-
-  /* Graphic design */
-  .gd-grid { grid-template-columns: 1fr; }
-  .gd-intro { margin-top: 0; }
-
-  /* Education */
-  .edu-strip { grid-template-columns: 1fr; }
-  .edu-left, .edu-right { padding: 2rem 1.5rem; }
-
-  /* Contact */
-  .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
-
-  /* Footer */
-  footer { flex-direction: column; text-align: center; gap: 1rem; }
-}
-
-/* ==========================================================
-   RESPONSIVE — SMALL MOBILE (max 480px)
-   ========================================================== */
-@media (max-width: 480px) {
-  .skills-grid { grid-template-columns: 1fr; }
-  .hero-cta { flex-direction: column; width: 100%; }
-  .btn-fill, .btn-ghost { text-align: center; }
-  .sec-title { white-space: normal; }
-}
-
-/* ==========================================================
-   ACCESSIBILITY — Reduce motion
-   ========================================================== */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-  html { scroll-behavior: auto; }
-}
-
-/* ==========================================================
-   FOCUS STYLES (keyboard nav)
-   ========================================================== */
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Salsabeel Zahra — Textile & Graphic Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Image lightbox">
+  <button id="lb-close" type="button" aria-label="Close lightbox">✕</button>
+  <img id="lb-img" src="" alt="">
+  <div id="lb-caption"></div>
+</div>
+
+<!-- NAVIGATION -->
+<nav id="nav" role="navigation" aria-label="Main navigation">
+  <a href="#hero" class="nav-logo">Salsabeel Zahra</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#gallery">Work</a></li>
+    <li><a href="#graphic-design">Graphic Design</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburgerBtn" type="button" aria-label="Toggle mobile menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#gallery">Work</a></li>
+    <li><a href="#graphic-design">Graphic Design</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</div>
+<div class="overlay-blur" id="overlayBlur"></div>
+
+<!-- HERO -->
+<section id="hero" aria-label="Hero section">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <p class="hero-eyebrow"><span aria-hidden="true"></span> Available for Freelance</p>
+  <h1 class="hero-name">Salsabeel<em>Zahra.</em></h1>
+  <div class="hero-bottom">
+    <p class="hero-desc">Textile &amp; Graphic Designer — creating meaningful work at the intersection of surface pattern, visual storytelling, and digital craft.</p>
+    <div class="hero-cta">
+      <a href="#gallery" class="btn-fill">View My Work ↓</a>
+      <a href="https://www.behance.net/salsabeelzahra1" target="_blank" rel="noopener noreferrer" class="btn-ghost">Behance →</a>
+    </div>
+  </div>
+  <div class="scroll-hint" aria-hidden="true"><div class="scroll-line"></div>Scroll</div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" aria-label="About section">
+  <div class="two-col">
+    <div>
+      <p class="about-label">About Me</p>
+      <h2 class="about-heading">Design with<br><em>purpose &amp; soul</em></h2>
+      <p class="about-text">I'm a creative designer with a deep love for surface pattern, visual storytelling, and the art of turning abstract ideas into tangible, meaningful work. My background in Textile Design gives me a unique lens — every composition, every colour choice, every motif carries intention.</p>
+      <p class="about-text">From hand-drawn sketches to polished digital executions, I bring both traditional craft and contemporary digital practice to everything I make.</p>
+    </div>
+    <div>
+      <div class="info-row"><div class="info-key">Based in</div><div class="info-val">Lahore, Punjab, Pakistan</div></div>
+      <div class="info-row"><div class="info-key">Specialisation</div><div class="info-val">Textile Design · Graphic Design · Fashion Illustration</div></div>
+      <div class="info-row"><div class="info-key">Education</div><div class="info-val">B.Textile Design — Superior University (2019–2023)</div></div>
+      <div class="info-row"><div class="info-key">Email</div><div class="info-val"><a href="mailto:salsabeelzahra10@gmail.com">salsabeelzahra10@gmail.com</a></div></div>
+      <div class="info-row"><div class="info-key">Phone</div><div class="info-val"><a href="tel:+923211015440">+92 321 1015440</a></div></div>
+      <div class="info-row"><div class="info-key">Status</div><div class="info-val" style="color:var(--accent)">Open to freelance projects ✦</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" aria-label="Skills section">
+  <div class="skills-inner">
+    <div class="sec-head">
+      <span class="sec-index" aria-hidden="true">02</span>
+      <h2 class="sec-title">Skills &amp; <em>Expertise</em></h2>
+      <span class="sec-rule" aria-hidden="true"></span>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-tile"><span class="skill-glyph" aria-hidden="true">◉</span><h3 class="skill-name">Textile Design</h3><p class="skill-desc">Surface pattern development, motif creation, repeat systems</p></div>
+      <div class="skill-tile"><span class="skill-glyph" aria-hidden="true">✦</span><h3 class="skill-name">Graphic Design</h3><p class="skill-desc">Advertising, branding identities, visual content</p></div>
+      <div class="skill-tile"><span class="skill-glyph" aria-hidden="true">✏</span><h3 class="skill-name">Fashion Illustration</h3><p class="skill-desc">Detailed fashion drawings communicating garment structure</p></div>
+      <div class="skill-tile"><span class="skill-glyph" aria-hidden="true">◈</span><h3 class="skill-name">Creative Thinking</h3><p class="skill-desc">Conceptual ideation, visual problem-solving</p></div>
+      <div class="skill-tile"><span class="skill-glyph" aria-hidden="true">▣</span><h3 class="skill-name">Branding</h3><p class="skill-desc">Building cohesive visual systems</p></div>
+      <div class="skill-tile"><span class="skill-glyph" aria-hidden="true">⬡</span><h3 class="skill-name">Visual Communication</h3><p class="skill-desc">Layout composition, colour theory, typography</p></div>
+    </div>
+    <div class="sw-row">
+      <span class="sw-chip">Adobe Photoshop</span>
+      <span class="sw-chip">Adobe Illustrator</span>
+      <span class="sw-chip">Canva</span>
+      <span class="sw-chip">MS Office Suite</span>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" aria-label="Experience section">
+  <div class="sec-head">
+    <span class="sec-index" aria-hidden="true">03</span>
+    <h2 class="sec-title">Work <em>Experience</em></h2>
+    <span class="sec-rule" aria-hidden="true"></span>
+  </div>
+  <div class="exp-item">
+    <div>
+      <div class="exp-period">Apr 2025 – Present</div>
+      <div class="exp-org">University of Management &amp; Technology</div>
+    </div>
+    <div>
+      <h3 class="exp-role">Examination Officer</h3>
+      <ul class="exp-bullets">
+        <li>Managing examination processes and academic records</li>
+        <li>Coordinating across departments for smooth operations</li>
+      </ul>
+    </div>
+  </div>
+  <div class="exp-item">
+    <div>
+      <div class="exp-period">Sep – Nov 2024</div>
+      <div class="exp-org">ZAFF Institute · Arfa Tower</div>
+    </div>
+    <div>
+      <h3 class="exp-role">Graphic Designer</h3>
+      <ul class="exp-bullets">
+        <li>Designed advertising posters and promotional materials</li>
+        <li>Created engaging on-brand visual content</li>
+      </ul>
+    </div>
+  </div>
+  <div class="exp-item">
+    <div>
+      <div class="exp-period">Aug – Sep 2024</div>
+      <div class="exp-org">brainzNeye</div>
+    </div>
+    <div>
+      <h3 class="exp-role">Graphic Designer</h3>
+      <ul class="exp-bullets">
+        <li>Created company profiles and branding materials</li>
+        <li>Developed visual concepts for presentations</li>
+      </ul>
+    </div>
+  </div>
+  <div class="exp-item">
+    <div>
+      <div class="exp-period">2022</div>
+      <div class="exp-org">Nishat Mills Limited</div>
+    </div>
+    <div>
+      <h3 class="exp-role">Design Intern</h3>
+      <ul class="exp-bullets">
+        <li>Developed textile patterns for production</li>
+        <li>Assisted in fabric sampling and mockups</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- TEXTILE GALLERY -->
+<section id="gallery" aria-label="Textile work gallery">
+  <div class="gallery-inner">
+    <div class="sec-head">
+      <span class="sec-index" aria-hidden="true">04</span>
+      <h2 class="sec-title">Selected <em>Work</em></h2>
+      <span class="sec-rule" aria-hidden="true"></span>
+    </div>
+    <div class="gallery-filter" role="group" aria-label="Filter gallery by category">
+      <button type="button" class="filter-btn active" data-filter="all">All Work</button>
+      <button type="button" class="filter-btn" data-filter="textile">Textile</button>
+      <button type="button" class="filter-btn" data-filter="illustration">Illustration</button>
+      <button type="button" class="filter-btn" data-filter="wearable">Wearable</button>
+    </div>
+    <div class="gallery-bento" id="gallery-grid">
+
+      <div class="g-item gc-4 gr-2" data-cat="textile">
+        <img src="assets/images/rotary design 1.jpg" alt="Vibrant Floral Pattern" loading="lazy"
+          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80'">
+        <a class="g-link-icon" href="https://www.behance.net/salsabeelzahra1" target="_blank" rel="noopener noreferrer" aria-label="View on Behance">↗</a>
+        <div class="g-overlay">
+          <div class="g-cat">Textile Design</div>
+          <div class="g-name">Vibrant Floral Pattern</div>
+        </div>
+      </div>
+
+      <div class="g-item gc-2" data-cat="textile">
+        <img src="assets/images/rotary design 2.jpg" alt="Geometric Repeat" loading="lazy"
+          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=80'">
+        <div class="g-overlay">
+          <div class="g-cat">Pattern Development</div>
+          <div class="g-name">Geometric Repeat</div>
+        </div>
+      </div>
+
+      <div class="g-item gc-2" data-cat="illustration">
+        <img src="assets/images/mannual composed design 1.jpg" alt="Sketch Series" loading="lazy"
+          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600&q=80'">
+        <div class="g-overlay">
+          <div class="g-cat">Fashion Illustration</div>
+          <div class="g-name">Sketch Series</div>
+        </div>
+      </div>
+
+      <div class="g-item gc-2" data-cat="textile">
+        <img src="assets/images/natured inspired mannual work.jpg" alt="Nature Inspired Manual Work" loading="lazy"
+          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=600&q=80'">
+        <div class="g-overlay">
+          <div class="g-cat">Textile Design</div>
+          <div class="g-name">Manual Work</div>
+        </div>
+      </div>
+
+      <div class="g-item gc-3" data-cat="wearable">
+        <img src="assets/images/digital design.jpg" alt="Summer Collection" loading="lazy"
+          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&q=80'">
+        <a class="g-link-icon" href="https://www.behance.net/salsabeelzahra1" target="_blank" rel="noopener noreferrer" aria-label="View on Behance">↗</a>
+        <div class="g-overlay">
+          <div class="g-cat">Fashion Design</div>
+          <div class="g-name">Summer Collection</div>
+        </div>
+      </div>
+
+      <div class="g-item gc-3" data-cat="illustration">
+        <img src="assets/images/t-shirt design 2.jpg" alt="Abstract Portrait Series" loading="lazy"
+          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&q=80'">
+        <div class="g-overlay">
+          <div class="g-cat">Digital Art</div>
+          <div class="g-name">Abstract Portrait Series</div>
+        </div>
+      </div>
+
+      <div class="g-item gc-2" data-cat="wearable">
+        <img src="assets/images/digital design 2.jpg" alt="Urban Collection" loading="lazy"
+          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=600&q=80'">
+        <div class="g-overlay">
+          <div class="g-cat">Streetwear</div>
+          <div class="g-name">Urban Collection</div>
+        </div>
+      </div>
+
+      <div class="g-item gc-2" data-cat="textile">
+        <img src="assets/images/digial design 3.jpg" alt="Digital Print Design" loading="lazy"
+          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&q=80'">
+        <div class="g-overlay">
+          <div class="g-cat">Surface Pattern</div>
+          <div class="g-name">Digital Print Design</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="section-cta">
+      <a href="https://www.behance.net/salsabeelzahra1" target="_blank" rel="noopener noreferrer" class="btn-ghost">View All Projects on Behance →</a>
+    </div>
+  </div>
+</section>
+
+<!-- GRAPHIC DESIGN GALLERY -->
+<section id="graphic-design" aria-label="Graphic Design gallery">
+  <div class="gd-inner">
+    <div class="sec-head">
+      <span class="sec-index" aria-hidden="true">05</span>
+      <h2 class="sec-title">Graphic <em>Design</em></h2>
+      <span class="sec-rule" aria-hidden="true"></span>
+    </div>
+    <p class="gd-intro">A curated selection of branding, advertising, and visual communication work — where strategy meets aesthetics.</p>
+
+    <div class="gd-filter" role="group" aria-label="Filter graphic design work">
+      <button type="button" class="filter-btn active" data-filter-gd="all">All</button>
+      <button type="button" class="filter-btn" data-filter-gd="branding">Branding</button>
+      <button type="button" class="filter-btn" data-filter-gd="poster">Posters</button>
+      <button type="button" class="filter-btn" data-filter-gd="social">Social Media</button>
+      <button type="button" class="filter-btn" data-filter-gd="print">Print</button>
+    </div>
+
+    <div class="gd-grid" id="gd-grid">
+
+      <div class="gd-card" data-gd-cat="branding">
+        <div class="gd-img-wrap">
+          <img src="https://images.unsplash.com/photo-1634942537034-2531766767d1?w=700&q=80"
+            alt="Brand Identity Design" loading="lazy">
+          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
+        </div>
+        <div class="gd-info">
+          <span class="gd-tag">Branding</span>
+          <h3 class="gd-title">Brand Identity</h3>
+          <p class="gd-sub">Logo design &amp; visual system</p>
+        </div>
+      </div>
+
+      <div class="gd-card" data-gd-cat="poster">
+        <div class="gd-img-wrap">
+          <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=700&q=80"
+            alt="Advertising Poster Design" loading="lazy">
+          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
+        </div>
+        <div class="gd-info">
+          <span class="gd-tag">Poster</span>
+          <h3 class="gd-title">Advertising Poster</h3>
+          <p class="gd-sub">ZAFF Institute campaign</p>
+        </div>
+      </div>
+
+      <div class="gd-card" data-gd-cat="social">
+        <div class="gd-img-wrap">
+          <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=700&q=80"
+            alt="Social Media Content Design" loading="lazy">
+          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
+        </div>
+        <div class="gd-info">
+          <span class="gd-tag">Social Media</span>
+          <h3 class="gd-title">Content Design</h3>
+          <p class="gd-sub">Promotional visual content</p>
+        </div>
+      </div>
+
+      <div class="gd-card" data-gd-cat="print">
+        <div class="gd-img-wrap">
+          <img src="https://images.unsplash.com/photo-1586717799252-bd134ad00e26?w=700&q=80"
+            alt="Print Collateral Design" loading="lazy">
+          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
+        </div>
+        <div class="gd-info">
+          <span class="gd-tag">Print</span>
+          <h3 class="gd-title">Print Collateral</h3>
+          <p class="gd-sub">Brochures &amp; company profiles</p>
+        </div>
+      </div>
+
+      <div class="gd-card" data-gd-cat="branding">
+        <div class="gd-img-wrap">
+          <img src="https://images.unsplash.com/photo-1600132806370-bf17e65e942f?w=700&q=80"
+            alt="Visual Identity Design" loading="lazy">
+          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
+        </div>
+        <div class="gd-info">
+          <span class="gd-tag">Branding</span>
+          <h3 class="gd-title">Visual Identity</h3>
+          <p class="gd-sub">Cohesive brand system</p>
+        </div>
+      </div>
+
+      <div class="gd-card" data-gd-cat="poster">
+        <div class="gd-img-wrap">
+          <img src="https://images.unsplash.com/photo-1572044162444-ad60f128bdea?w=700&q=80"
+            alt="Event Poster Design" loading="lazy">
+          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
+        </div>
+        <div class="gd-info">
+          <span class="gd-tag">Poster</span>
+          <h3 class="gd-title">Event Poster</h3>
+          <p class="gd-sub">Typography &amp; layout</p>
+        </div>
+      </div>
+
+      <div class="gd-card" data-gd-cat="social">
+        <div class="gd-img-wrap">
+          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=700&q=80"
+            alt="Social Media Campaign" loading="lazy">
+          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
+        </div>
+        <div class="gd-info">
+          <span class="gd-tag">Social Media</span>
+          <h3 class="gd-title">Campaign Graphics</h3>
+          <p class="gd-sub">Engagement-driven visuals</p>
+        </div>
+      </div>
+
+      <div class="gd-card" data-gd-cat="print">
+        <div class="gd-img-wrap">
+          <img src="https://images.unsplash.com/photo-1531346680769-a1d79b57de5c?w=700&q=80"
+            alt="Magazine Layout Design" loading="lazy">
+          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
+        </div>
+        <div class="gd-info">
+          <span class="gd-tag">Print</span>
+          <h3 class="gd-title">Magazine Layout</h3>
+          <p class="gd-sub">Editorial design &amp; typography</p>
+        </div>
+      </div>
+
+      <div class="gd-card" data-gd-cat="branding">
+        <div class="gd-img-wrap">
+          <img src="https://images.unsplash.com/photo-1493421419110-74f4e85ba126?w=700&q=80"
+            alt="Packaging Design" loading="lazy">
+          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
+        </div>
+        <div class="gd-info">
+          <span class="gd-tag">Branding</span>
+          <h3 class="gd-title">Packaging Design</h3>
+          <p class="gd-sub">Product &amp; retail packaging</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="section-cta">
+      <a href="https://www.behance.net/salsabeelzahra1" target="_blank" rel="noopener noreferrer" class="btn-ghost">View All Graphic Design on Behance →</a>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education" aria-label="Education section">
+  <div class="sec-head">
+    <span class="sec-index" aria-hidden="true">06</span>
+    <h2 class="sec-title"><em>Education</em></h2>
+    <span class="sec-rule" aria-hidden="true"></span>
+  </div>
+  <div class="edu-strip">
+    <div class="edu-left">
+      <div class="edu-badge">Bachelor's Degree</div>
+      <h3 class="edu-degree">Textile Design</h3>
+      <p class="edu-school">School of Art &amp; Design, Superior University</p>
+      <div class="edu-pills">
+        <span class="edu-pill">2019 – 2023</span>
+        <span class="edu-pill">Lahore, Pakistan</span>
+      </div>
+    </div>
+    <div class="edu-right">
+      <div>
+        <div class="edu-right-head">A creative foundation in craft &amp; concept</div>
+        <p class="edu-right-text">Four immersive years of textile design — surface pattern, fashion illustration, visual communication — combining traditional craft with contemporary practice.</p>
+      </div>
+      <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border)">
+        <p style="font-size:12px;margin-bottom:0.5rem;color:var(--ink3)">Core Focus Areas</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <span class="edu-pill">Surface Pattern</span>
+          <span class="edu-pill">Fashion Illustration</span>
+          <span class="edu-pill">Visual Communication</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" aria-label="Contact section">
+  <div class="contact-inner">
+    <div class="sec-head">
+      <span class="sec-index" aria-hidden="true">07</span>
+      <h2 class="sec-title">Let's <em>Connect</em></h2>
+      <span class="sec-rule" aria-hidden="true"></span>
+    </div>
+    <div class="contact-grid">
+      <div>
+        <p class="contact-tagline">"Every great design begins with an even better story — let's write yours."</p>
+        <a href="mailto:salsabeelzahra10@gmail.com" class="clink"><span class="clink-icon" aria-hidden="true">✉</span> salsabeelzahra10@gmail.com</a>
+        <a href="tel:+923211015440" class="clink"><span class="clink-icon" aria-hidden="true">☎</span> +92 321 1015440</a>
+      </div>
+      <div class="social-list">
+        <a class="soc-item" href="https://www.linkedin.com/in/salsabeel-zahra" target="_blank" rel="noopener noreferrer">
+          <div><div class="soc-name">LinkedIn</div><div class="soc-handle">salsabeel-zahra</div></div>
+          <span class="soc-arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="soc-item" href="https://www.behance.net/salsabeelzahra1" target="_blank" rel="noopener noreferrer">
+          <div><div class="soc-name">Behance</div><div class="soc-handle">salsabeelzahra1</div></div>
+          <span class="soc-arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="soc-item" href="https://instagram.com/salsabeel.zahraa" target="_blank" rel="noopener noreferrer">
+          <div><div class="soc-name">Instagram</div><div class="soc-handle">salsabeel.zahraa</div></div>
+          <span class="soc-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="foot-copy">© 2025 Salsabeel Zahra — All rights reserved.</span>
+  <a href="#hero" class="back-top">↑ Back to top</a>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
