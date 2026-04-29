@@ -1,483 +1,260 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Salsabeel Zahra — Textile & Graphic Designer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+/**
+ * main.js — Salsabeel Zahra Portfolio
+ * Fixed & Optimized for GitHub Pages
+ *
+ * Fixes applied:
+ * 1. Gallery filter now uses data attributes (not inline onclick) — works reliably after deployment
+ * 2. Lightbox attached via event delegation — no inline onclick needed in HTML
+ * 3. Hamburger aria-expanded toggled for accessibility
+ * 4. Separate filter logic for textile gallery vs graphic design gallery
+ * 5. Defensive null checks before accessing DOM elements
+ * 6. closeLB / closeMenu can be safely called multiple times
+ */
 
-<!-- LIGHTBOX -->
-<div id="lightbox" role="dialog" aria-modal="true" aria-label="Image lightbox">
-  <button id="lb-close" type="button" aria-label="Close lightbox">✕</button>
-  <img id="lb-img" src="" alt="">
-  <div id="lb-caption"></div>
-</div>
+'use strict';
 
-<!-- NAVIGATION -->
-<nav id="nav" role="navigation" aria-label="Main navigation">
-  <a href="#hero" class="nav-logo">Salsabeel Zahra</a>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#gallery">Work</a></li>
-    <li><a href="#graphic-design">Graphic Design</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <button class="hamburger" id="hamburgerBtn" type="button" aria-label="Toggle mobile menu" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
+/* ----------------------------------------------------------
+   NAV — scroll shadow
+   ---------------------------------------------------------- */
+const nav = document.getElementById('nav');
 
-<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-  <ul>
-    <li><a href="#about">About</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#gallery">Work</a></li>
-    <li><a href="#graphic-design">Graphic Design</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</div>
-<div class="overlay-blur" id="overlayBlur"></div>
+if (nav) {
+  const onScroll = () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  // Run once on load in case page is already scrolled
+  onScroll();
+}
 
-<!-- HERO -->
-<section id="hero" aria-label="Hero section">
-  <div class="hero-bg" aria-hidden="true"></div>
-  <p class="hero-eyebrow"><span aria-hidden="true"></span> Available for Freelance</p>
-  <h1 class="hero-name">Salsabeel<em>Zahra.</em></h1>
-  <div class="hero-bottom">
-    <p class="hero-desc">Textile &amp; Graphic Designer — creating meaningful work at the intersection of surface pattern, visual storytelling, and digital craft.</p>
-    <div class="hero-cta">
-      <a href="#gallery" class="btn-fill">View My Work ↓</a>
-      <a href="https://www.behance.net/salsabeelzahra1" target="_blank" rel="noopener noreferrer" class="btn-ghost">Behance →</a>
-    </div>
-  </div>
-  <div class="scroll-hint" aria-hidden="true"><div class="scroll-line"></div>Scroll</div>
-</section>
+/* ----------------------------------------------------------
+   HAMBURGER MENU
+   ---------------------------------------------------------- */
+const hamburger   = document.getElementById('hamburgerBtn');
+const mobileMenu  = document.getElementById('mobileMenu');
+const overlayBlur = document.getElementById('overlayBlur');
 
-<!-- ABOUT -->
-<section id="about" aria-label="About section">
-  <div class="two-col">
-    <div>
-      <p class="about-label">About Me</p>
-      <h2 class="about-heading">Design with<br><em>purpose &amp; soul</em></h2>
-      <p class="about-text">I'm a creative designer with a deep love for surface pattern, visual storytelling, and the art of turning abstract ideas into tangible, meaningful work. My background in Textile Design gives me a unique lens — every composition, every colour choice, every motif carries intention.</p>
-      <p class="about-text">From hand-drawn sketches to polished digital executions, I bring both traditional craft and contemporary digital practice to everything I make.</p>
-    </div>
-    <div>
-      <div class="info-row"><div class="info-key">Based in</div><div class="info-val">Lahore, Punjab, Pakistan</div></div>
-      <div class="info-row"><div class="info-key">Specialisation</div><div class="info-val">Textile Design · Graphic Design · Fashion Illustration</div></div>
-      <div class="info-row"><div class="info-key">Education</div><div class="info-val">B.Textile Design — Superior University (2019–2023)</div></div>
-      <div class="info-row"><div class="info-key">Email</div><div class="info-val"><a href="mailto:salsabeelzahra10@gmail.com">salsabeelzahra10@gmail.com</a></div></div>
-      <div class="info-row"><div class="info-key">Phone</div><div class="info-val"><a href="tel:+923211015440">+92 321 1015440</a></div></div>
-      <div class="info-row"><div class="info-key">Status</div><div class="info-val" style="color:var(--accent)">Open to freelance projects ✦</div></div>
-    </div>
-  </div>
-</section>
+function closeMenu() {
+  if (!mobileMenu) return;
+  mobileMenu.classList.remove('active');
+  mobileMenu.setAttribute('aria-hidden', 'true');
+  overlayBlur && overlayBlur.classList.remove('active');
+  hamburger && hamburger.classList.remove('active');
+  hamburger && hamburger.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
 
-<!-- SKILLS -->
-<section id="skills" aria-label="Skills section">
-  <div class="skills-inner">
-    <div class="sec-head">
-      <span class="sec-index" aria-hidden="true">02</span>
-      <h2 class="sec-title">Skills &amp; <em>Expertise</em></h2>
-      <span class="sec-rule" aria-hidden="true"></span>
-    </div>
-    <div class="skills-grid">
-      <div class="skill-tile"><span class="skill-glyph" aria-hidden="true">◉</span><h3 class="skill-name">Textile Design</h3><p class="skill-desc">Surface pattern development, motif creation, repeat systems</p></div>
-      <div class="skill-tile"><span class="skill-glyph" aria-hidden="true">✦</span><h3 class="skill-name">Graphic Design</h3><p class="skill-desc">Advertising, branding identities, visual content</p></div>
-      <div class="skill-tile"><span class="skill-glyph" aria-hidden="true">✏</span><h3 class="skill-name">Fashion Illustration</h3><p class="skill-desc">Detailed fashion drawings communicating garment structure</p></div>
-      <div class="skill-tile"><span class="skill-glyph" aria-hidden="true">◈</span><h3 class="skill-name">Creative Thinking</h3><p class="skill-desc">Conceptual ideation, visual problem-solving</p></div>
-      <div class="skill-tile"><span class="skill-glyph" aria-hidden="true">▣</span><h3 class="skill-name">Branding</h3><p class="skill-desc">Building cohesive visual systems</p></div>
-      <div class="skill-tile"><span class="skill-glyph" aria-hidden="true">⬡</span><h3 class="skill-name">Visual Communication</h3><p class="skill-desc">Layout composition, colour theory, typography</p></div>
-    </div>
-    <div class="sw-row">
-      <span class="sw-chip">Adobe Photoshop</span>
-      <span class="sw-chip">Adobe Illustrator</span>
-      <span class="sw-chip">Canva</span>
-      <span class="sw-chip">MS Office Suite</span>
-    </div>
-  </div>
-</section>
+function openMenu() {
+  if (!mobileMenu) return;
+  mobileMenu.classList.add('active');
+  mobileMenu.setAttribute('aria-hidden', 'false');
+  overlayBlur && overlayBlur.classList.add('active');
+  hamburger && hamburger.classList.add('active');
+  hamburger && hamburger.setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden';
+}
 
-<!-- EXPERIENCE -->
-<section id="experience" aria-label="Experience section">
-  <div class="sec-head">
-    <span class="sec-index" aria-hidden="true">03</span>
-    <h2 class="sec-title">Work <em>Experience</em></h2>
-    <span class="sec-rule" aria-hidden="true"></span>
-  </div>
-  <div class="exp-item">
-    <div>
-      <div class="exp-period">Apr 2025 – Present</div>
-      <div class="exp-org">University of Management &amp; Technology</div>
-    </div>
-    <div>
-      <h3 class="exp-role">Examination Officer</h3>
-      <ul class="exp-bullets">
-        <li>Managing examination processes and academic records</li>
-        <li>Coordinating across departments for smooth operations</li>
-      </ul>
-    </div>
-  </div>
-  <div class="exp-item">
-    <div>
-      <div class="exp-period">Sep – Nov 2024</div>
-      <div class="exp-org">ZAFF Institute · Arfa Tower</div>
-    </div>
-    <div>
-      <h3 class="exp-role">Graphic Designer</h3>
-      <ul class="exp-bullets">
-        <li>Designed advertising posters and promotional materials</li>
-        <li>Created engaging on-brand visual content</li>
-      </ul>
-    </div>
-  </div>
-  <div class="exp-item">
-    <div>
-      <div class="exp-period">Aug – Sep 2024</div>
-      <div class="exp-org">brainzNeye</div>
-    </div>
-    <div>
-      <h3 class="exp-role">Graphic Designer</h3>
-      <ul class="exp-bullets">
-        <li>Created company profiles and branding materials</li>
-        <li>Developed visual concepts for presentations</li>
-      </ul>
-    </div>
-  </div>
-  <div class="exp-item">
-    <div>
-      <div class="exp-period">2022</div>
-      <div class="exp-org">Nishat Mills Limited</div>
-    </div>
-    <div>
-      <h3 class="exp-role">Design Intern</h3>
-      <ul class="exp-bullets">
-        <li>Developed textile patterns for production</li>
-        <li>Assisted in fabric sampling and mockups</li>
-      </ul>
-    </div>
-  </div>
-</section>
+function toggleMenu() {
+  if (mobileMenu && mobileMenu.classList.contains('active')) {
+    closeMenu();
+  } else {
+    openMenu();
+  }
+}
 
-<!-- TEXTILE GALLERY -->
-<section id="gallery" aria-label="Textile work gallery">
-  <div class="gallery-inner">
-    <div class="sec-head">
-      <span class="sec-index" aria-hidden="true">04</span>
-      <h2 class="sec-title">Selected <em>Work</em></h2>
-      <span class="sec-rule" aria-hidden="true"></span>
-    </div>
-    <div class="gallery-filter" role="group" aria-label="Filter gallery by category">
-      <button type="button" class="filter-btn active" data-filter="all">All Work</button>
-      <button type="button" class="filter-btn" data-filter="textile">Textile</button>
-      <button type="button" class="filter-btn" data-filter="illustration">Illustration</button>
-      <button type="button" class="filter-btn" data-filter="wearable">Wearable</button>
-    </div>
-    <div class="gallery-bento" id="gallery-grid">
+if (hamburger) hamburger.addEventListener('click', toggleMenu);
+if (overlayBlur) overlayBlur.addEventListener('click', closeMenu);
 
-      <div class="g-item gc-4 gr-2" data-cat="textile">
-        <img src="assets/images/rotary design 1.jpg" alt="Vibrant Floral Pattern" loading="lazy"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80'">
-        <a class="g-link-icon" href="https://www.behance.net/salsabeelzahra1" target="_blank" rel="noopener noreferrer" aria-label="View on Behance">↗</a>
-        <div class="g-overlay">
-          <div class="g-cat">Textile Design</div>
-          <div class="g-name">Vibrant Floral Pattern</div>
-        </div>
-      </div>
+// Close menu when any mobile nav link is clicked
+document.querySelectorAll('.mobile-menu a').forEach(link => {
+  link.addEventListener('click', closeMenu);
+});
 
-      <div class="g-item gc-2" data-cat="textile">
-        <img src="assets/images/rotary design 2.jpg" alt="Geometric Repeat" loading="lazy"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=80'">
-        <div class="g-overlay">
-          <div class="g-cat">Pattern Development</div>
-          <div class="g-name">Geometric Repeat</div>
-        </div>
-      </div>
+// Close menu on Escape key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeMenu();
+    closeLB();
+  }
+});
 
-      <div class="g-item gc-2" data-cat="illustration">
-        <img src="assets/images/mannual composed design 1.jpg" alt="Sketch Series" loading="lazy"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600&q=80'">
-        <div class="g-overlay">
-          <div class="g-cat">Fashion Illustration</div>
-          <div class="g-name">Sketch Series</div>
-        </div>
-      </div>
+/* ----------------------------------------------------------
+   TEXTILE GALLERY FILTER
+   FIX: Uses data-filter attribute on buttons instead of inline onclick
+   ---------------------------------------------------------- */
+const galleryGrid   = document.getElementById('gallery-grid');
+const filterButtons = document.querySelectorAll('[data-filter]');
 
-      <div class="g-item gc-2" data-cat="textile">
-        <img src="assets/images/natured inspired mannual work.jpg" alt="Nature Inspired Manual Work" loading="lazy"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=600&q=80'">
-        <div class="g-overlay">
-          <div class="g-cat">Textile Design</div>
-          <div class="g-name">Manual Work</div>
-        </div>
-      </div>
+function filterGallery(cat) {
+  const items = galleryGrid ? galleryGrid.querySelectorAll('.g-item') : [];
+  items.forEach(item => {
+    const itemCat = item.getAttribute('data-cat') || '';
+    // Show/hide using display property — works correctly in bento grid
+    item.style.display = (cat === 'all' || itemCat === cat) ? '' : 'none';
+  });
+}
 
-      <div class="g-item gc-3" data-cat="wearable">
-        <img src="assets/images/digital design.jpg" alt="Summer Collection" loading="lazy"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&q=80'">
-        <a class="g-link-icon" href="https://www.behance.net/salsabeelzahra1" target="_blank" rel="noopener noreferrer" aria-label="View on Behance">↗</a>
-        <div class="g-overlay">
-          <div class="g-cat">Fashion Design</div>
-          <div class="g-name">Summer Collection</div>
-        </div>
-      </div>
+filterButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    // Update active state
+    filterButtons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    // Filter items
+    filterGallery(btn.getAttribute('data-filter') || 'all');
+  });
+});
 
-      <div class="g-item gc-3" data-cat="illustration">
-        <img src="assets/images/t-shirt design 2.jpg" alt="Abstract Portrait Series" loading="lazy"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&q=80'">
-        <div class="g-overlay">
-          <div class="g-cat">Digital Art</div>
-          <div class="g-name">Abstract Portrait Series</div>
-        </div>
-      </div>
+/* ----------------------------------------------------------
+   GRAPHIC DESIGN GALLERY FILTER
+   FIX: Separate filter system for the new GD section
+   ---------------------------------------------------------- */
+const gdGrid       = document.getElementById('gd-grid');
+const gdFilterBtns = document.querySelectorAll('[data-filter-gd]');
 
-      <div class="g-item gc-2" data-cat="wearable">
-        <img src="assets/images/digital design 2.jpg" alt="Urban Collection" loading="lazy"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=600&q=80'">
-        <div class="g-overlay">
-          <div class="g-cat">Streetwear</div>
-          <div class="g-name">Urban Collection</div>
-        </div>
-      </div>
+function filterGD(cat) {
+  const cards = gdGrid ? gdGrid.querySelectorAll('.gd-card') : [];
+  cards.forEach(card => {
+    const cardCat = card.getAttribute('data-gd-cat') || '';
+    card.style.display = (cat === 'all' || cardCat === cat) ? '' : 'none';
+  });
+}
 
-      <div class="g-item gc-2" data-cat="textile">
-        <img src="assets/images/digial design 3.jpg" alt="Digital Print Design" loading="lazy"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&q=80'">
-        <div class="g-overlay">
-          <div class="g-cat">Surface Pattern</div>
-          <div class="g-name">Digital Print Design</div>
-        </div>
-      </div>
+gdFilterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    gdFilterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterGD(btn.getAttribute('data-filter-gd') || 'all');
+  });
+});
 
-    </div>
-    <div class="section-cta">
-      <a href="https://www.behance.net/salsabeelzahra1" target="_blank" rel="noopener noreferrer" class="btn-ghost">View All Projects on Behance →</a>
-    </div>
-  </div>
-</section>
+/* ----------------------------------------------------------
+   LIGHTBOX
+   FIX: Event delegation instead of inline onclick — survives DOM changes
+        and doesn't rely on global function scope
+   ---------------------------------------------------------- */
+const lightbox = document.getElementById('lightbox');
+const lbImg    = document.getElementById('lb-img');
+const lbCaption = document.getElementById('lb-caption');
+const lbClose  = document.getElementById('lb-close');
 
-<!-- GRAPHIC DESIGN GALLERY -->
-<section id="graphic-design" aria-label="Graphic Design gallery">
-  <div class="gd-inner">
-    <div class="sec-head">
-      <span class="sec-index" aria-hidden="true">05</span>
-      <h2 class="sec-title">Graphic <em>Design</em></h2>
-      <span class="sec-rule" aria-hidden="true"></span>
-    </div>
-    <p class="gd-intro">A curated selection of branding, advertising, and visual communication work — where strategy meets aesthetics.</p>
+function openLB(src, cat, title) {
+  if (!lightbox || !lbImg) return;
+  lbImg.src = src;
+  lbImg.alt = title || 'Gallery image';
+  if (lbCaption) {
+    lbCaption.innerHTML = `
+      <div style="color:var(--accent);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">${cat || ''}</div>
+      <div style="font-family:var(--serif);font-size:18px;font-style:italic">${title || ''}</div>
+    `;
+  }
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
 
-    <div class="gd-filter" role="group" aria-label="Filter graphic design work">
-      <button type="button" class="filter-btn active" data-filter-gd="all">All</button>
-      <button type="button" class="filter-btn" data-filter-gd="branding">Branding</button>
-      <button type="button" class="filter-btn" data-filter-gd="poster">Posters</button>
-      <button type="button" class="filter-btn" data-filter-gd="social">Social Media</button>
-      <button type="button" class="filter-btn" data-filter-gd="print">Print</button>
-    </div>
+function closeLB() {
+  if (!lightbox) return;
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+  // Clear src after transition so browser doesn't hold it in memory
+  setTimeout(() => {
+    if (lbImg && !lightbox.classList.contains('open')) {
+      lbImg.src = '';
+    }
+  }, 300);
+}
 
-    <div class="gd-grid" id="gd-grid">
+// Close when clicking the backdrop
+if (lightbox) {
+  lightbox.addEventListener('click', e => {
+    if (e.target === lightbox) closeLB();
+  });
+}
 
-      <div class="gd-card" data-gd-cat="branding">
-        <div class="gd-img-wrap">
-          <img src="https://images.unsplash.com/photo-1634942537034-2531766767d1?w=700&q=80"
-            alt="Brand Identity Design" loading="lazy">
-          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
-        </div>
-        <div class="gd-info">
-          <span class="gd-tag">Branding</span>
-          <h3 class="gd-title">Brand Identity</h3>
-          <p class="gd-sub">Logo design &amp; visual system</p>
-        </div>
-      </div>
+// Close button
+if (lbClose) {
+  lbClose.addEventListener('click', closeLB);
+}
 
-      <div class="gd-card" data-gd-cat="poster">
-        <div class="gd-img-wrap">
-          <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=700&q=80"
-            alt="Advertising Poster Design" loading="lazy">
-          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
-        </div>
-        <div class="gd-info">
-          <span class="gd-tag">Poster</span>
-          <h3 class="gd-title">Advertising Poster</h3>
-          <p class="gd-sub">ZAFF Institute campaign</p>
-        </div>
-      </div>
+// Attach lightbox to textile gallery items via event delegation
+if (galleryGrid) {
+  galleryGrid.addEventListener('click', e => {
+    // Don't open lightbox if user clicked the external Behance link
+    if (e.target.closest('.g-link-icon')) return;
 
-      <div class="gd-card" data-gd-cat="social">
-        <div class="gd-img-wrap">
-          <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=700&q=80"
-            alt="Social Media Content Design" loading="lazy">
-          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
-        </div>
-        <div class="gd-info">
-          <span class="gd-tag">Social Media</span>
-          <h3 class="gd-title">Content Design</h3>
-          <p class="gd-sub">Promotional visual content</p>
-        </div>
-      </div>
+    const item = e.target.closest('.g-item');
+    if (!item) return;
 
-      <div class="gd-card" data-gd-cat="print">
-        <div class="gd-img-wrap">
-          <img src="https://images.unsplash.com/photo-1586717799252-bd134ad00e26?w=700&q=80"
-            alt="Print Collateral Design" loading="lazy">
-          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
-        </div>
-        <div class="gd-info">
-          <span class="gd-tag">Print</span>
-          <h3 class="gd-title">Print Collateral</h3>
-          <p class="gd-sub">Brochures &amp; company profiles</p>
-        </div>
-      </div>
+    // Read data from overlay elements
+    const cat   = item.querySelector('.g-cat')?.textContent  || '';
+    const name  = item.querySelector('.g-name')?.textContent || '';
+    const img   = item.querySelector('img');
+    const src   = img ? img.src : '';
 
-      <div class="gd-card" data-gd-cat="branding">
-        <div class="gd-img-wrap">
-          <img src="https://images.unsplash.com/photo-1600132806370-bf17e65e942f?w=700&q=80"
-            alt="Visual Identity Design" loading="lazy">
-          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
-        </div>
-        <div class="gd-info">
-          <span class="gd-tag">Branding</span>
-          <h3 class="gd-title">Visual Identity</h3>
-          <p class="gd-sub">Cohesive brand system</p>
-        </div>
-      </div>
+    if (src) openLB(src, cat, name);
+  });
+}
 
-      <div class="gd-card" data-gd-cat="poster">
-        <div class="gd-img-wrap">
-          <img src="https://images.unsplash.com/photo-1572044162444-ad60f128bdea?w=700&q=80"
-            alt="Event Poster Design" loading="lazy">
-          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
-        </div>
-        <div class="gd-info">
-          <span class="gd-tag">Poster</span>
-          <h3 class="gd-title">Event Poster</h3>
-          <p class="gd-sub">Typography &amp; layout</p>
-        </div>
-      </div>
+// Also allow graphic design cards to open lightbox
+if (gdGrid) {
+  gdGrid.addEventListener('click', e => {
+    if (e.target.closest('a')) return; // don't block real links
+    const card = e.target.closest('.gd-card');
+    if (!card) return;
 
-      <div class="gd-card" data-gd-cat="social">
-        <div class="gd-img-wrap">
-          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=700&q=80"
-            alt="Social Media Campaign" loading="lazy">
-          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
-        </div>
-        <div class="gd-info">
-          <span class="gd-tag">Social Media</span>
-          <h3 class="gd-title">Campaign Graphics</h3>
-          <p class="gd-sub">Engagement-driven visuals</p>
-        </div>
-      </div>
+    const tag   = card.querySelector('.gd-tag')?.textContent   || '';
+    const title = card.querySelector('.gd-title')?.textContent || '';
+    const img   = card.querySelector('img');
+    const src   = img ? img.src : '';
 
-      <div class="gd-card" data-gd-cat="print">
-        <div class="gd-img-wrap">
-          <img src="https://images.unsplash.com/photo-1531346680769-a1d79b57de5c?w=700&q=80"
-            alt="Magazine Layout Design" loading="lazy">
-          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
-        </div>
-        <div class="gd-info">
-          <span class="gd-tag">Print</span>
-          <h3 class="gd-title">Magazine Layout</h3>
-          <p class="gd-sub">Editorial design &amp; typography</p>
-        </div>
-      </div>
+    if (src) openLB(src, tag, title);
+  });
+}
 
-      <div class="gd-card" data-gd-cat="branding">
-        <div class="gd-img-wrap">
-          <img src="https://images.unsplash.com/photo-1493421419110-74f4e85ba126?w=700&q=80"
-            alt="Packaging Design" loading="lazy">
-          <div class="gd-hover"><span class="gd-zoom" aria-hidden="true">+</span></div>
-        </div>
-        <div class="gd-info">
-          <span class="gd-tag">Branding</span>
-          <h3 class="gd-title">Packaging Design</h3>
-          <p class="gd-sub">Product &amp; retail packaging</p>
-        </div>
-      </div>
+/* ----------------------------------------------------------
+   KEYBOARD ACCESSIBILITY — Lightbox trap
+   ---------------------------------------------------------- */
+if (lightbox) {
+  lightbox.addEventListener('keydown', e => {
+    if (e.key === 'Tab') {
+      e.preventDefault(); // Keep focus inside lightbox
+    }
+  });
+}
 
-    </div>
-    <div class="section-cta">
-      <a href="https://www.behance.net/salsabeelzahra1" target="_blank" rel="noopener noreferrer" class="btn-ghost">View All Graphic Design on Behance →</a>
-    </div>
-  </div>
-</section>
+/* ----------------------------------------------------------
+   SMOOTH SCROLL — polyfill for browsers that ignore css scroll-behavior
+   (Optional: only needed for very old browsers)
+   ---------------------------------------------------------- */
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    const targetId = this.getAttribute('href');
+    if (!targetId || targetId === '#') return;
+    const target = document.querySelector(targetId);
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
 
-<!-- EDUCATION -->
-<section id="education" aria-label="Education section">
-  <div class="sec-head">
-    <span class="sec-index" aria-hidden="true">06</span>
-    <h2 class="sec-title"><em>Education</em></h2>
-    <span class="sec-rule" aria-hidden="true"></span>
-  </div>
-  <div class="edu-strip">
-    <div class="edu-left">
-      <div class="edu-badge">Bachelor's Degree</div>
-      <h3 class="edu-degree">Textile Design</h3>
-      <p class="edu-school">School of Art &amp; Design, Superior University</p>
-      <div class="edu-pills">
-        <span class="edu-pill">2019 – 2023</span>
-        <span class="edu-pill">Lahore, Pakistan</span>
-      </div>
-    </div>
-    <div class="edu-right">
-      <div>
-        <div class="edu-right-head">A creative foundation in craft &amp; concept</div>
-        <p class="edu-right-text">Four immersive years of textile design — surface pattern, fashion illustration, visual communication — combining traditional craft with contemporary practice.</p>
-      </div>
-      <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border)">
-        <p style="font-size:12px;margin-bottom:0.5rem;color:var(--ink3)">Core Focus Areas</p>
-        <div style="display:flex;flex-wrap:wrap;gap:8px">
-          <span class="edu-pill">Surface Pattern</span>
-          <span class="edu-pill">Fashion Illustration</span>
-          <span class="edu-pill">Visual Communication</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+/* ----------------------------------------------------------
+   IMAGE ERROR FALLBACK — ensure all images have a fallback
+   Applied via onerror in HTML, but also patched here for safety
+   ---------------------------------------------------------- */
+document.querySelectorAll('img[onerror]').forEach(img => {
+  if (!img.complete || img.naturalWidth === 0) {
+    // Already handled by inline onerror, but we ensure the event fires
+    img.addEventListener('error', function () {
+      this.onerror = null;
+      if (!this.src.includes('placehold.co')) {
+        this.src = 'https://placehold.co/600x400/2a241e/c8874a?text=Image+Not+Found';
+      }
+    });
+  }
+});
 
-<!-- CONTACT -->
-<section id="contact" aria-label="Contact section">
-  <div class="contact-inner">
-    <div class="sec-head">
-      <span class="sec-index" aria-hidden="true">07</span>
-      <h2 class="sec-title">Let's <em>Connect</em></h2>
-      <span class="sec-rule" aria-hidden="true"></span>
-    </div>
-    <div class="contact-grid">
-      <div>
-        <p class="contact-tagline">"Every great design begins with an even better story — let's write yours."</p>
-        <a href="mailto:salsabeelzahra10@gmail.com" class="clink"><span class="clink-icon" aria-hidden="true">✉</span> salsabeelzahra10@gmail.com</a>
-        <a href="tel:+923211015440" class="clink"><span class="clink-icon" aria-hidden="true">☎</span> +92 321 1015440</a>
-      </div>
-      <div class="social-list">
-        <a class="soc-item" href="https://www.linkedin.com/in/salsabeel-zahra" target="_blank" rel="noopener noreferrer">
-          <div><div class="soc-name">LinkedIn</div><div class="soc-handle">salsabeel-zahra</div></div>
-          <span class="soc-arrow" aria-hidden="true">→</span>
-        </a>
-        <a class="soc-item" href="https://www.behance.net/salsabeelzahra1" target="_blank" rel="noopener noreferrer">
-          <div><div class="soc-name">Behance</div><div class="soc-handle">salsabeelzahra1</div></div>
-          <span class="soc-arrow" aria-hidden="true">→</span>
-        </a>
-        <a class="soc-item" href="https://instagram.com/salsabeel.zahraa" target="_blank" rel="noopener noreferrer">
-          <div><div class="soc-name">Instagram</div><div class="soc-handle">salsabeel.zahraa</div></div>
-          <span class="soc-arrow" aria-hidden="true">→</span>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <span class="foot-copy">© 2025 Salsabeel Zahra — All rights reserved.</span>
-  <a href="#hero" class="back-top">↑ Back to top</a>
-</footer>
-
-<script src="js/main.js"></script>
-</body>
-</html>
+/* ----------------------------------------------------------
+   EXPOSE openLB globally ONLY as backward-compat fallback
+   (In case any other code references it)
+   ---------------------------------------------------------- */
+window.openLB = openLB;
