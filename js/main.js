@@ -151,10 +151,17 @@ function openLB(src, cat, title) {
   document.body.style.overflow = 'hidden';
 }
 
+let _lbTrigger = null; // tracks which element opened the lightbox
+
 function closeLB() {
   if (!lightbox) return;
   lightbox.classList.remove('open');
   document.body.style.overflow = '';
+  // Restore focus to element that opened the lightbox (accessibility)
+  if (_lbTrigger) {
+    _lbTrigger.focus();
+    _lbTrigger = null;
+  }
   // Clear src after transition so browser doesn't hold it in memory
   setTimeout(() => {
     if (lbImg && !lightbox.classList.contains('open')) {
@@ -190,7 +197,7 @@ if (galleryGrid) {
     const img   = item.querySelector('img');
     const src   = img ? img.src : '';
 
-    if (src) openLB(src, cat, name);
+    if (src) { _lbTrigger = item; openLB(src, cat, name); }
   });
 }
 
@@ -206,7 +213,7 @@ if (gdGrid) {
     const img   = card.querySelector('img');
     const src   = img ? img.src : '';
 
-    if (src) openLB(src, tag, title);
+    if (src) { _lbTrigger = card; openLB(src, tag, title); }
   });
 }
 
@@ -238,20 +245,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 /* ----------------------------------------------------------
-   IMAGE ERROR FALLBACK — ensure all images have a fallback
-   Applied via onerror in HTML, but also patched here for safety
+   IMAGE ERROR FALLBACK
+   Handled via onerror attributes directly in HTML for reliability.
    ---------------------------------------------------------- */
-document.querySelectorAll('img[onerror]').forEach(img => {
-  if (!img.complete || img.naturalWidth === 0) {
-    // Already handled by inline onerror, but we ensure the event fires
-    img.addEventListener('error', function () {
-      this.onerror = null;
-      if (!this.src.includes('placehold.co')) {
-        this.src = 'https://placehold.co/600x400/2a241e/c8874a?text=Image+Not+Found';
-      }
-    });
-  }
-});
 
 /* ----------------------------------------------------------
    EXPOSE openLB globally ONLY as backward-compat fallback
